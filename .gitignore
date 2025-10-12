@@ -1,0 +1,45 @@
+# Git Repository Ignore File
+
+# Secrets and sensitive data
+secrets.json
+*.key
+*.pem
+.env
+.env.local
+
+# Research findings (will be in separate branch)
+research-findings/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Docker
+.dockerignore
+
+# Temporary files
+tmp/
+temp/
+*.tmp
