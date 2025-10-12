@@ -423,6 +423,8 @@ Based on critical path findings, adjust implementation phases:
 2. ✅ **Make Go/No-Go decision** (recommendation: GO)
 3. ✅ **Acquire hardware** (powered hub, PSU, optional eMMC)
 4. ✅ **Proceed with high-priority research** (HW-01, SW-01, ST-01, HW-04)
+   - ✅ ST-01: Filesystem Choice (COMPLETE - ext4 recommended)
+   - ✅ HW-04: Thermal Management (COMPLETE - active cooling required)
 5. ✅ **Update project specification** after all research complete
 6. ✅ **Begin Phase 0 implementation** (hardware procurement)
 
@@ -434,7 +436,8 @@ Based on critical path findings, adjust implementation phases:
 2. `/research-findings/HW-03-Power-Requirements.md` (38KB, High confidence)
 3. `/research-findings/SW-02-Grafana-Loki-Resources.md` (39KB, Medium-High confidence)
 4. `/research-findings/SW-04-Claude-Code-ARM-Compatibility.md` (41KB, High confidence)
-5. `/research-findings/CRITICAL-PATH-SUMMARY.md` (this document)
+5. `/research-findings/ST-01-Filesystem-Choice.md` (47KB, High confidence) ✨ NEW
+6. `/research-findings/CRITICAL-PATH-SUMMARY.md` (this document)
 
 ---
 
