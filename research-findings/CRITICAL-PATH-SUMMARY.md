@@ -16,6 +16,7 @@ All four critical path research questions have been answered with HIGH or MEDIUM
 |---------------|--------|-------------|--------|
 | **HW-02: USB Ports** | ⚠️ Yellow Flag | USB 2.0 only (35 MB/s max) | Requires powered hub, suitable for workload |
 | **HW-03: Power** | ⚠️ Yellow Flag | Powered hub mandatory | Additional $47-62 investment |
+| **HW-04: Thermal** | ⚠️ Yellow Flag | Active cooling required | Additional $15-25 for heatsink + fan + case |
 | **SW-02: Monitoring** | ⚠️ Yellow Flag | VictoriaLogs instead of Loki | Stack fits in 670MB RAM |
 | **SW-04: Claude Code** | ✅ Green Light | Native ARM64 support | Use v0.2.114 (bug workaround) |
 
@@ -24,11 +25,12 @@ All four critical path research questions have been answered with HIGH or MEDIUM
 **PROCEED** with the project using the following modifications:
 
 1. **Add powered USB hub** (Sabrent or Anker, $35-50)
-2. **Use VictoriaLogs** instead of Loki for monitoring
-3. **Pin Claude Code** to v0.2.114 until v1.0.51+ bug is fixed
-4. **Consider eMMC module** for OS to reduce SD card wear ($20-40)
+2. **Add active cooling** (heatsink + 3010 fan + case, $15-25)
+3. **Use VictoriaLogs** instead of Loki for monitoring
+4. **Pin Claude Code** to v0.2.114 until v1.0.51+ bug is fixed
+5. **Consider eMMC module** for OS to reduce SD card wear ($20-40)
 
-**Total Additional Investment:** $65-90 (beyond original plan)
+**Total Additional Investment:** $80-115 (beyond original plan)
 
 ---
 
@@ -332,6 +334,179 @@ RUN npm install -g @anthropic-ai/claude-code@0.2.114
 
 ---
 
+### HW-04: Thermal Management for 24/7 Operation ⚠️
+
+**Research File:** `HW-04-Thermal-Management.md` (48KB, 1126 lines)
+**Confidence:** 🟢 High
+
+**Executive Summary:**
+- Le Potato requires active cooling for reliable 24/7 operation
+- Thermal throttling at 60°C occurs in <5 minutes with 25%+ CPU usage
+- Heatsink + 3010 fan combination is essential for sustained workloads
+- Temperature monitoring integration with Grafana is critical
+
+**Critical Discovery:**
+- **Throttling threshold:** 60°C (CPU drops to 100MHz - 97% performance loss)
+- **Time to throttle (no cooling):** <5 minutes at 25%+ CPU load
+- **Docker workload impact:** Combined services will push 30-60% sustained CPU
+- **Current cooling assessment:** User has "small fan + external case (unspecified)" - verification needed
+
+**Safe Operating Temperatures:**
+- Idle: 35-45°C (with proper cooling)
+- Typical load (25-50% CPU): 45-55°C
+- Heavy load (75% CPU): 52-58°C
+- **WARNING zone:** 58°C+ (throttling imminent)
+- **CRITICAL:** 60°C+ (throttling active, performance degraded)
+
+**Cooling Effectiveness:**
+| Solution | Temp Reduction | Suitability |
+|----------|----------------|-------------|
+| No cooling | Baseline | ❌ Throttles in <5 min |
+| Heatsink only | -20°C | ⚠️ Marginal for 24/7 |
+| Heatsink + 3010 fan | -30-35°C | ✅ Recommended |
+
+**Recommended Cooling Solution:**
+1. **Heatsink:** Libre Computer official (aluminum, covers CPU + RAM)
+   - Temperature reduction: ~20°C
+   - Cost: $5-8
+
+2. **Active Cooling:** 3010 5V fan
+   - Specifications: 2.5-5 CFM, 22-26 dBA, 0.75W power draw
+   - Additional temp reduction: 10-15°C
+   - Cost: $3-5
+
+3. **Case:** LoveRPi Active Cooling Case (official recommendation)
+   - Integrated fan mount and heatsink support
+   - Proper ventilation design
+   - Cost: $10-15
+
+**Total cooling cost:** $15-25
+
+**Temperature Monitoring Implementation:**
+
+1. **Direct thermal reading:**
+```bash
+cat /sys/class/thermal/thermal_zone0/temp
+# Returns millidegrees: 45000 = 45°C
+```
+
+2. **Grafana Integration:**
+   - Node Exporter exposes: `node_thermal_zone_temp{zone="0"}`
+   - Dashboard ID 15202: "Node Exporter / Node Temperatures"
+   - Alert thresholds:
+     - ⚠️ Warning: 55°C (review cooling)
+     - 🔴 Critical: 58°C (imminent throttling)
+     - 🚨 Emergency: 60°C+ (throttling active)
+
+3. **Monitoring tools:**
+   - lm-sensors package
+   - Custom monitoring script (provided in research)
+   - Grafana dashboard with temperature alerts
+
+**Workload-Specific Temperature Profile:**
+
+| Workload Scenario | CPU Usage | Expected Temp | Risk |
+|-------------------|-----------|---------------|------|
+| Pi-hole + Tailscale | 15-20% | 42-45°C | None |
+| + Grafana idle | 20-25% | 45-48°C | None |
+| + Loki ingestion | 30-40% | 48-52°C | None |
+| + Samba transfer | 50-70% | 52-56°C | Very Low |
+| + Dev build | 80-100% | 56-60°C | Low |
+
+**Thermal Issues in Generic S905X Devices:**
+- Poorly ventilated TV boxes: 80-90°C under load
+- Case removal drops temps from 83°C to <60°C
+- Le Potato advantage: Open board format allows proper cooling
+
+**Known Issues & Workarounds:**
+1. **Fan runs too loud:** Connect to 3.3V instead of 5V (60% speed, quieter)
+2. **sensors command shows nothing:** Use direct sysfs reading (more reliable)
+3. **Throttling despite fan:** Check heatsink contact, re-apply thermal paste
+4. **Temperature spikes on container start:** Normal; ensure cooling handles sustained load
+
+**Critical Warnings:**
+
+❌ **DO NOT:**
+- Run 24/7 server without active cooling (will throttle under load)
+- Ignore temperature monitoring (throttling occurs silently)
+- Block case ventilation (intake/exhaust paths critical)
+- Assume current setup is adequate without verification
+
+**Validation Testing Required:**
+1. ✅ Measure baseline temperature (idle and under load)
+2. ✅ Run stress test: `stress-ng --cpu 4 --timeout 600s`
+3. ✅ Monitor during test: Watch for 60°C threshold
+4. ✅ Verify no throttling: Check CPU frequency stays at 1.5 GHz
+5. ✅ Integrate with Grafana: Add temperature dashboard and alerts
+
+**Longevity Considerations:**
+- **1-3 year continuous operation:** Achievable with proper cooling (<55°C sustained)
+- **Early warning signs:** Gradual temperature increases (thermal paste degradation)
+- **Maintenance schedule:**
+  - Quarterly: Clean dust from case and fan
+  - Annually: Re-apply thermal paste if needed
+- **Thermal monitoring:** Essential for detecting cooling failures before damage
+
+**Risks & Mitigations:**
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Fan failure undetected | Medium | High | Temperature monitoring with alerts |
+| Dust accumulation | High | Medium | Quarterly cleaning schedule |
+| Thermal throttling during peak | Low | High | Active cooling + monitoring |
+| Case ventilation inadequate | Medium | High | Verify airflow before deployment |
+
+**Architecture Impact:**
+1. Add cooling hardware to Phase 0 procurement:
+   - Heatsink: $5-8
+   - 3010 5V fan: $3-5
+   - Active cooling case: $10-15
+   - **Total: $15-25**
+
+2. Add thermal monitoring to Phase 2 (Monitoring Stack):
+   - Import Grafana temperature dashboard (ID 15202)
+   - Configure alert rules (55°C warning, 58°C critical)
+   - Run 10-minute stress test for baseline
+   - Document baseline temps for comparison
+
+3. Add maintenance tasks:
+   - Quarterly: Case cleaning (dust removal)
+   - Annually: Thermal paste refresh (if temps increase)
+   - Ongoing: Temperature trend monitoring
+
+**Alternatives if Cooling Insufficient:**
+1. Reduce workload (disable non-critical containers)
+2. Improve ambient cooling (air conditioning, room fans)
+3. Use larger/secondary fan
+4. Implement PWM fan control for dynamic cooling
+5. Relocate to cooler environment
+
+**Documentation Provided:**
+- ✅ Complete installation guide (heatsink, fan, case)
+- ✅ Temperature monitoring setup (sysfs, lm-sensors, Grafana)
+- ✅ Docker Compose config for monitoring integration
+- ✅ Stress testing procedures
+- ✅ Alert rule configurations
+- ✅ Troubleshooting guide
+- ✅ Maintenance schedule
+
+**Next Steps:**
+1. Verify current cooling setup (heatsink present? Fan operational?)
+2. Measure baseline temperature (idle and stress test)
+3. Install temperature monitoring (immediate priority)
+4. Upgrade cooling if needed (heatsink + fan + case)
+5. Run 48-hour stability test before production deployment
+
+**Confidence Justification:**
+- ✅ 60°C throttling threshold confirmed by multiple sources
+- ✅ Cooling effectiveness quantified (20°C heatsink, 10-15°C fan)
+- ✅ Real-world 24/7 deployment experiences documented
+- ✅ Temperature monitoring approach is standardized
+- ✅ Case and fan recommendations from official sources
+- ⚠️ No Le Potato-specific long-term reliability data (extrapolated from S905X community)
+
+---
+
 ## DECISION GATE ASSESSMENT
 
 As specified in the research execution guide, this decision gate determines whether to proceed with remaining research or redesign the project.
@@ -359,10 +534,11 @@ As specified in the research execution guide, this decision gate determines whet
 
 ### Required Modifications Summary
 
-**Hardware Additions (Total: $65-90):**
+**Hardware Additions (Total: $80-115):**
 1. Powered USB hub: $35-50
 2. GenBasic 5V 3A PSU: $12
-3. eMMC module (optional): $20-40
+3. Active cooling (heatsink + fan + case): $15-25
+4. eMMC module (optional): $20-40
 
 **Software/Architecture Changes:**
 1. Replace Loki with VictoriaLogs
@@ -370,6 +546,7 @@ As specified in the research execution guide, this decision gate determines whet
 3. Add zram swap (512MB)
 4. Implement dynamic monitoring start/stop
 5. Reduce log retention to 5 days
+6. Add temperature monitoring to Grafana with alerts
 
 ### Decision
 
@@ -395,19 +572,26 @@ Based on critical path findings, adjust implementation phases:
 ### Phase 0: Hardware Procurement (NEW)
 1. ✅ Acquire powered USB hub (Sabrent or Anker)
 2. ✅ Acquire GenBasic 5V 3A PSU
-3. ⚠️ Consider eMMC module (optional but recommended)
+3. ✅ Acquire cooling hardware (heatsink + 3010 fan + LoveRPi case)
+4. ⚠️ Consider eMMC module (optional but recommended)
 
 ### Phase 1: Base System Setup (Modified)
-1. Flash Ubuntu Server ARM to eMMC (or microSD if no eMMC)
-2. Configure zram swap (512MB compressed)
-3. Test powered hub + PSU stability
-4. Proceed with standard setup
+1. Install cooling hardware (heatsink + fan + case)
+2. Flash Ubuntu Server ARM to eMMC (or microSD if no eMMC)
+3. Configure zram swap (512MB compressed)
+4. Test powered hub + PSU stability
+5. Install temperature monitoring and run baseline thermal test
+6. Proceed with standard setup
 
 ### Phase 6: Monitoring Stack (Modified)
 1. Deploy VictoriaLogs stack (not Loki)
 2. Use provided Docker Compose from SW-02 research
 3. Configure 5-day retention (not 7-day)
-4. Implement dynamic start/stop if dev container conflicts
+4. Add temperature monitoring integration:
+   - Import Grafana dashboard (ID 15202)
+   - Configure temperature alerts (55°C warning, 58°C critical)
+   - Run stress test to validate thermal baseline
+5. Implement dynamic start/stop if dev container conflicts
 
 ### Phase 5: Development Environment (Modified)
 1. Use Claude Code v0.2.114 (not latest)
@@ -423,6 +607,8 @@ Based on critical path findings, adjust implementation phases:
 2. ✅ **Make Go/No-Go decision** (recommendation: GO)
 3. ✅ **Acquire hardware** (powered hub, PSU, optional eMMC)
 4. ✅ **Proceed with high-priority research** (HW-01, SW-01, ST-01, HW-04)
+   - ✅ ST-01: Filesystem Choice (COMPLETE - ext4 recommended)
+   - ✅ HW-04: Thermal Management (COMPLETE - active cooling required)
 5. ✅ **Update project specification** after all research complete
 6. ✅ **Begin Phase 0 implementation** (hardware procurement)
 
@@ -432,9 +618,11 @@ Based on critical path findings, adjust implementation phases:
 
 1. `/research-findings/HW-02-USB-Port-Specifications.md` (20KB, High confidence)
 2. `/research-findings/HW-03-Power-Requirements.md` (38KB, High confidence)
-3. `/research-findings/SW-02-Grafana-Loki-Resources.md` (39KB, Medium-High confidence)
-4. `/research-findings/SW-04-Claude-Code-ARM-Compatibility.md` (41KB, High confidence)
-5. `/research-findings/CRITICAL-PATH-SUMMARY.md` (this document)
+3. `/research-findings/HW-04-Thermal-Management.md` (48KB, High confidence) ✨ NEW
+4. `/research-findings/SW-02-Grafana-Loki-Resources.md` (39KB, Medium-High confidence)
+5. `/research-findings/SW-04-Claude-Code-ARM-Compatibility.md` (41KB, High confidence)
+6. `/research-findings/ST-01-Filesystem-Choice.md` (47KB, High confidence)
+7. `/research-findings/CRITICAL-PATH-SUMMARY.md` (this document)
 
 ---
 
