@@ -7,9 +7,6 @@ secrets.json
 .env
 .env.local
 
-# Research findings (will be in separate branch)
-research-findings/
-
 # Logs
 *.log
 logs/
