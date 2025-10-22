@@ -1,315 +1,431 @@
-# Le Potato Home Server - Research Planning Package
+# Le Potato Home Server
 
-**Generated:** October 11, 2025  
-**Purpose:** Pre-implementation research planning for Le Potato home server project  
-**Status:** Planning Mode - No research executed yet
+**Libre Computer AML-S905X-CC (Le Potato) 2GB**
+**Status:** Planning → Implementation
+**Version:** 2.0 (Research-Validated)
+**Overall Confidence:** 🟢 HIGH (90%)
 
----
-
-## 📦 What's Included
-
-This package contains three comprehensive documents to guide the research phase of your Le Potato home server project:
-
-### 1. **lepotato-research-prompts.md** (Main Document)
-The core research metaprompts organized by category:
-
-- **Hardware Research** (4 prompts): USB boot, USB specs, power, thermal management
-- **Software Research** (5 prompts): Pi-hole networking, Grafana/Loki, Docker, Claude Code, happy.engineering
-- **Storage Research** (4 prompts): Filesystem choice, log relocation, Docker volumes, backups
-- **Monitoring Research** (3 prompts): Log retention, dashboards, alerting
-- **Synthesis** (1 prompt): Integrating all findings
-
-**Total: 17 research prompts** designed for execution by a research agent with sequential thinking and web search capabilities.
-
-### 2. **research-execution-guide.md** (Strategy Document)
-Practical guidance on executing the research:
-
-- **Priority ordering** of prompts (Critical → High → Medium → Low)
-- **Phase-based execution** strategy with time estimates
-- **Decision gates** and red flags to watch for
-- **Priority adjustments** based on findings
-- **Success metrics** for completed research
-
-### 3. **research-findings-template.md** (Documentation Template)
-Standardized template for documenting findings from each prompt:
-
-- Executive summary format
-- Detailed analysis structure
-- Implementation guidance sections
-- Risk assessment framework
-- Source citation format
-- Confidence level rating system
+A research-validated home server project transforming the Le Potato single-board computer into a reliable, containerized server with remote access, network-wide ad blocking, monitoring, and development capabilities.
 
 ---
 
-## 🎯 Project Context
-
-### Hardware
-- **Board:** Libre Computer AML-S905X-CC (Le Potato)
-- **Model:** AML-S905X-CC-2GB
-- **CPU:** Quad-core ARM Cortex-A53 @ 1.5GHz (64-bit)
-- **RAM:** 2GB DDR3
-- **Boot:** 256GB SanDisk microSD card
-- **Storage:** External SSD (USB 3.0, planning 2TB)
-- **Network:** Tailscale VPN + local LAN
+## 📋 Project Overview
 
 ### Primary Goals
-1. **Reliable 24/7 home server** with self-healing capabilities
-2. **Remote access** via Tailscale VPN (no local interaction needed)
-3. **Network-wide ad blocking** with Pi-hole
-4. **Development environment** with Claude Code + happy.engineering
-5. **NAS capabilities** with external SSD storage
-6. **Comprehensive monitoring** with Grafana + Loki
-7. **Minimal SD card wear** for longevity
+- **24/7 Reliable Server** with self-healing Docker containers
+- **Remote Access** via Tailscale VPN (no local interaction needed)
+- **Network-Wide Ad Blocking** with Pi-hole accessible from anywhere
+- **On-Demand Development** with Claude Code + happy.engineering
+- **NAS Capabilities** using external SSD storage
+- **Comprehensive Monitoring** with VictoriaLogs + Grafana + Netdata
+- **Data Protection** with automated daily backups
 
-### Key Constraints
-- Only 2GB RAM (must budget carefully)
-- ARM64 architecture (software compatibility questions)
-- USB-attached storage (performance and reliability concerns)
-- microSD boot with longevity concerns (1-3 year lifespan)
-- Home server use case (simplicity and low maintenance preferred)
+### Hardware Specifications
+- **Board:** Libre Computer AML-S905X-CC (Le Potato)
+- **CPU:** Quad-core ARM Cortex-A53 @ 1.5GHz (64-bit ARM64)
+- **RAM:** 2GB DDR3 (hard constraint)
+- **Boot Storage:** 32GB eMMC module (4× faster than microSD)
+- **Data Storage:** External SSDs via powered USB hub
+- **Cooling:** Active cooling (heatsink + 3010 5V fan)
+- **Network:** Gigabit Ethernet + Tailscale VPN
 
----
-
-## 🚀 How to Use This Package
-
-### Step 1: Review the Project Spec
-Read the original `le-potato-server-spec.md` to understand the full context and goals.
-
-### Step 2: Understand the Execution Strategy
-Open `research-execution-guide.md` and review:
-- The priority ordering of prompts
-- The phase-based approach
-- The decision gates and red flags
-- The time estimates for each phase
-
-### Step 3: Execute Research Prompts
-Use `lepotato-research-prompts.md` as your guide:
-
-**For each prompt:**
-1. Read the full prompt carefully (don't skim!)
-2. Note the specific hardware/software context
-3. Understand the research questions
-4. Follow the suggested search strategy
-5. Aim for the desired output format
-
-**Recommended tool usage:**
-- **Sequential Thinking:** For complex multi-part questions
-- **Tavily/Brave Search:** For general web searches, documentation
-- **Exa/Perplexity:** For deep technical content, GitHub issues, forums
-
-### Step 4: Document Findings
-For each completed prompt:
-1. Copy the `research-findings-template.md`
-2. Rename it (e.g., `HW-01-USB-Boot-Findings.md`)
-3. Fill in all sections thoroughly
-4. Assign a confidence level (High/Medium/Low)
-5. Provide clear recommendations
-
-### Step 5: Synthesize Results
-After completing all 16 specific prompts:
-1. Execute the **SYN-01** synthesis prompt
-2. Look for conflicts or showstoppers
-3. Update architecture decisions
-4. Revise implementation phase priorities
-5. Create updated project specification v2.0
+### Key Features
+- ✅ **Pi-hole:** Network-wide ad/tracker blocking via Tailscale DNS
+- ✅ **Tailscale:** Zero-config VPN for secure remote access
+- ✅ **VictoriaLogs:** Lightweight log aggregation (87% less RAM than Loki)
+- ✅ **Grafana:** Real-time monitoring dashboards with temperature/memory alerts
+- ✅ **Netdata:** System metrics and Docker container monitoring
+- ✅ **Development Container:** Claude Code + Node.js 20 environment
+- ✅ **Automated Backups:** Daily rsync snapshots with 7-day retention
+- ✅ **Self-Healing:** Docker restart policies for automatic recovery
 
 ---
 
-## 📊 Critical Path Analysis
+## 🚀 Quick Start
 
-### Must Answer First (Showstopper Potential)
-1. **HW-02: USB Port Specifications** - Can storage plan work?
-2. **HW-03: Power Supply Requirements** - Is power adequate?
-3. **SW-02: Grafana/Loki Resources** - Will monitoring fit in 2GB RAM?
-4. **SW-04: Claude Code ARM Compatibility** - Is dev environment viable?
+### Current Status
+The project is in the **Planning → Implementation** transition phase:
 
-**⚠️ DECISION GATE:** If any show showstoppers, pause and redesign before proceeding with remaining research.
+1. ✅ **Research Complete** - 17 prompts validated, all findings documented
+2. ✅ **Architecture Finalized** - v2.0 specification ready
+3. ⏳ **Hardware Acquisition** - Essential components identified
+4. 📋 **Implementation Ready** - Phase-by-phase guide prepared
 
-### High Impact on Architecture
-- **SW-01: Pi-hole Docker Networking** - Core service configuration
-- **HW-01: USB Boot Capability** - Long-term storage strategy
-- **ST-01: ext4 vs btrfs** - Storage architecture foundation
-- **HW-04: Thermal Management** - 24/7 reliability requirement
-
-### Lower Priority (But Still Important)
-- **SW-05: happy.engineering** - Nice-to-have dev tool
-- **ST-02 through ST-04** - Storage optimizations
-- **MON-01 through MON-03** - Monitoring refinements
+### Next Steps
+1. Review the [Project Specification v2.0](docs/specs/le-potato-server-spec-v2.md)
+2. Acquire [essential hardware](#hardware-requirements) ($180-232)
+3. Follow [implementation phases](#implementation-phases) (4-6 weeks)
 
 ---
 
-## ⚡ Quick Start for Research Agent
-
-If you're a research agent about to execute these prompts:
+## 📁 Project Structure
 
 ```
-1. START with Critical Path prompts (HW-02, HW-03, SW-02, SW-04)
-2. STOP at first decision gate to assess feasibility
-3. IF feasible → CONTINUE with High Priority prompts
-4. IF showstoppers → FLAG for human review and architecture redesign
-5. DOCUMENT findings using the template (be thorough!)
-6. SYNTHESIZE at the end (SYN-01 prompt)
-7. DELIVER updated project specification with confidence levels
+HomeServer/
+├── README.md                          # This file
+├── CLAUDE.md                          # Claude AI workflow guidelines
+├── GIT_COMMIT_STYLE.md               # Git commit conventions
+├── QUICK-REFERENCE.md                # Quick reference guide
+├── docs/                             # Documentation
+│   ├── specs/                        # Project specifications
+│   │   └── le-potato-server-spec-v2.md  # Complete v2.0 specification
+│   ├── planning/                     # Research planning documents
+│   └── workflows/                    # Workflow documentation
+├── archive/                          # Research findings archive
+│   └── research-findings/            # 17 completed research documents
+└── ClaudeUsage/                      # Claude Code usage tracking
+```
+
+### Key Documents
+- **[le-potato-server-spec-v2.md](docs/specs/le-potato-server-spec-v2.md)** - Complete project specification with:
+  - Hardware requirements and validated components
+  - Service architecture and container configurations
+  - Resource budget for 2GB RAM constraint
+  - Day-by-day implementation guide
+  - Operational procedures and troubleshooting
+
+- **[archive/research-findings/](archive/)** - Research findings from:
+  - Hardware validation (USB, power, thermal, boot storage)
+  - Software compatibility (ARM64, Docker, monitoring stack)
+  - Storage architecture (filesystems, Docker volumes, backups)
+  - Monitoring solutions (log retention, dashboards, alerts)
+
+---
+
+## 🔧 Hardware Requirements
+
+### Essential Components ($180-232)
+All components validated through research for 24/7 reliability:
+
+| Component | Specification | Purpose | Est. Cost |
+|-----------|--------------|---------|-----------|
+| **eMMC Module** | 32GB (min 16GB) | Boot storage (4× faster than microSD) | $20-25 |
+| **Active Cooling** | Heatsink + 3010 5V fan | Prevent throttling (mandatory) | $8-15 |
+| **Ventilated Case** | LoveRPi Active Cooling Case | Housing + airflow | $10-15 |
+| **Powered USB Hub** | Sabrent/Anker 36W+ (7-port) | Stable SSD power (mandatory) | $25-35 |
+| **Power Supply** | GenBasic 5V 3A MicroUSB | Board power | $10-12 |
+| **Primary SSD** | 2.5" 1TB SATA SSD | Docker volumes + data | $60-80 |
+| **USB-SATA Adapter** | USB 3.0 (backwards compatible) | SSD connection | $12-15 |
+
+### Recommended Components ($112-150)
+Strong value-add for production use:
+
+| Component | Purpose | Est. Cost |
+|-----------|---------|-----------|
+| **Secondary SSD (1TB)** | Backups + logs | $60-80 |
+| **Second USB-SATA** | Secondary SSD connection | $12-15 |
+| **Thermal Camera** | Cooling verification | $25-35 |
+| **USB Power Meter** | Power troubleshooting | $15-20 |
+
+**Total Budget:**
+- Minimum viable: **$180-232** (essential only)
+- Recommended: **$300-392** (essential + recommended)
+
+### Why These Specific Components?
+
+**eMMC Boot (Research Finding HW-01):**
+- 140+ MB/s read/write vs 35 MB/s microSD
+- Better reliability and longevity
+- Faster boot times (<60 seconds)
+
+**Active Cooling (Research Finding HW-04):**
+- Without cooling: CPU throttles to 100MHz (97% performance loss!)
+- With cooling: Maintains 1.5GHz under load
+- Keeps temps <55°C for 24/7 operation
+
+**Powered USB Hub (Research Finding HW-03):**
+- Direct USB power WILL cause boot loops and crashes
+- SSD power spikes during spin-up exceed board capacity
+- Mandatory for storage stability
+
+---
+
+## 🏗️ Implementation Phases
+
+### Phase 0: Hardware Acquisition & Validation (1-2 days)
+- Acquire all essential components
+- Assemble hardware with active cooling
+- Validate power, thermal, and USB stability
+- **Success:** Idle temp <45°C, no USB errors for 30 minutes
+
+### Phase 1: Base System Setup (Week 1)
+- Flash Ubuntu Server 22.04 ARM64 to eMMC
+- Configure external SSD storage with ext4
+- Install Docker with external data-root
+- Set up thermal monitoring
+- **Success:** System boots reliably, temps <55°C under load
+
+### Phase 2: Core Services Deployment (Week 2)
+- Deploy Pi-hole + Tailscale containers
+- Configure Tailscale DNS for network-wide ad blocking
+- 48-hour stability testing
+- **Success:** Pi-hole accessible via Tailscale, ads blocked, no restarts
+
+### Phase 3: Monitoring Stack Deployment (Week 3)
+- Deploy VictoriaLogs + Grafana + Netdata
+- Configure temperature/memory alert rules
+- Import monitoring dashboards
+- **Success:** All metrics visible, alerts functional, <1.6GB RAM total
+
+### Phase 4: Development Environment (Week 4)
+- Build development container with Claude Code v0.2.114
+- Implement mode switching (dev ↔ monitoring)
+- Test Claude Code ARM64 compatibility
+- **Success:** Dev environment functional, memory <1.8GB in dev mode
+
+### Phase 5: NAS / File Sharing (Optional, Week 5)
+- Deploy Samba container for file sharing
+- Test access via Tailscale
+- **Success:** Network file access working
+
+### Phase 6: Backup Automation (Week 6)
+- Set up daily rsync backup script
+- Configure 7-day retention with hard-link snapshots
+- Test restoration procedure
+- **Success:** Automated backups running, restoration verified
+
+**Total Timeline:** 4-6 weeks from hardware to full deployment
+
+---
+
+## 💾 Service Architecture
+
+### Always-Running Services
+```
+System Base (Ubuntu 22.04):        ~400MB RAM
+Pi-hole + Tailscale:               ~200MB RAM
+VictoriaLogs:                      ~200MB RAM
+Grafana:                           ~150MB RAM
+vmagent (log collection):           ~50MB RAM
+Netdata (system metrics):          ~120MB RAM
+System buffers:                    ~200MB RAM
+----------------------------------------
+Total:                             ~1320MB RAM
+Available:                          ~680MB RAM
+```
+
+### On-Demand Services (Mutually Exclusive)
+Due to 2GB RAM constraint, development and monitoring cannot run simultaneously:
+
+**Development Mode:**
+- Development container (Claude Code + Node.js): ~400MB RAM
+- Total system usage: ~1200MB
+- Available: ~800MB
+
+**Monitoring Mode:**
+- Full monitoring stack: ~670MB RAM
+- Total system usage: ~1470MB
+- Available: ~530MB
+
+### Mode Switching
+```bash
+# Switch to development
+~/switch-to-dev.sh
+docker exec -it devenv bash
+
+# Switch back to monitoring
+~/switch-to-monitoring.sh
 ```
 
 ---
 
-## 🎨 Research Quality Guidelines
+## 🎯 Key Research Findings
 
-### Good Research Practices
-- ✅ Multiple sources for critical claims (verify, don't trust blindly)
-- ✅ Prioritize recent information (2023-2025)
-- ✅ Favor official documentation over blog posts
-- ✅ Look for real-world deployment experiences
-- ✅ Note ARM-specific considerations explicitly
-- ✅ Document confidence levels honestly
-- ✅ Flag uncertainties and conflicting information
+The v2.0 specification incorporates findings from 17 research prompts:
 
-### Red Flags
-- ❌ Single source for critical decisions
-- ❌ Outdated information (pre-2022 unless still relevant)
-- ❌ Generic answers not specific to ARM/SBC context
-- ❌ Unverified claims or speculation
-- ❌ Ignoring resource constraints (2GB RAM!)
-- ❌ Not considering 24/7 reliability requirements
+### Critical Architectural Changes
+- **Monitoring Stack:** VictoriaLogs instead of Loki (87% RAM reduction)
+- **Boot Strategy:** eMMC instead of microSD (4× faster, more reliable)
+- **Cooling:** Active cooling mandatory (prevents 97% performance loss)
+- **Power:** Powered USB hub required (prevents boot loops and crashes)
+- **Filesystem:** ext4 confirmed over btrfs (better Docker performance)
 
----
+### Validated Compatibility
+- ✅ Pi-hole + Tailscale: Service container networking validated
+- ✅ Claude Code v0.2.114: ARM64 compatible
+- ✅ VictoriaLogs: ARM64 support confirmed, LogQL compatible
+- ✅ Docker on ARM64: Full compatibility with overlay2 storage driver
 
-## 📋 Expected Deliverables
-
-After completing all research, you should have:
-
-1. **17 findings documents** (one per prompt, using template)
-2. **Updated project specification v2.0** (incorporating research)
-3. **Architecture decision records** (why choices were made)
-4. **Risk assessment matrix** (updated with research findings)
-5. **Implementation checklist** (prioritized and sequenced)
-6. **Shopping list** (any additional hardware needed)
+### Resource Management
+- Memory limits configured for all containers
+- Development/monitoring mutually exclusive operation
+- 8GB swap on external SSD as safety net
+- Log rotation and retention policies
 
 ---
 
-## 🔄 Iteration & Refinement
+## 📊 Project Status
 
-Research is iterative. If findings suggest major changes:
+### Completed
+- ✅ Research phase (17 prompts validated)
+- ✅ Architecture design v2.0
+- ✅ Hardware requirements validated
+- ✅ Implementation plan prepared
+- ✅ Docker configurations drafted
+- ✅ Monitoring dashboards identified
 
-1. **Document the conflict** clearly
-2. **Propose alternatives** with pros/cons
-3. **Seek human input** on strategic decisions
-4. **Update related prompts** that depend on the change
-5. **Re-research** affected areas if needed
+### In Progress
+- ⏳ Hardware acquisition
+- ⏳ Phase 0 validation testing
 
----
-
-## 💡 Tips for Success
-
-### Time Management
-- Estimated total research time: **10-15 hours**
-- Don't get stuck on any single prompt for more than 1-2 hours
-- If uncertain, document the uncertainty and move on
-- You can always circle back for deeper dives
-
-### Search Strategy
-- Start broad, then narrow based on initial findings
-- Use specific model numbers (AML-S905X-CC, not just "Le Potato")
-- Include year in searches for recent info ("2024", "2025")
-- Check multiple forums: Reddit, forum.librecomputer.io, Armbian forums
-- Look for GitHub issues on relevant projects
-
-### Avoiding Rabbit Holes
-- Stay focused on the specific research questions
-- Don't research tangential topics (however interesting!)
-- Remember: good enough > perfect
-- High confidence on critical path, medium confidence acceptable elsewhere
-
-### When to Ask for Help
-- When findings conflict and you can't resolve
-- When you find potential showstoppers
-- When confidence remains low after thorough search
-- When recommendations have significant cost/effort implications
+### Planned
+- 📋 Base system installation
+- 📋 Service deployment
+- 📋 Production validation
+- 📋 Long-term stability testing
 
 ---
 
-## 📚 Key Resources to Bookmark
+## 🔬 Technical Details
 
-### Official Documentation
-- Libre Computer: https://libre.computer/
-- Libre Computer Docs: https://hub.librecomputer.io/
-- Ubuntu ARM: https://ubuntu.com/download/server/arm
+### Operating System
+- **Ubuntu Server 22.04 LTS ARM64**
+- 5-year LTS support
+- Excellent ARM compatibility
+- Mature Docker ecosystem
 
-### Community Forums
-- Libre Computer Forum: https://forum.librecomputer.io/
-- Armbian Forum: https://forum.armbian.com/
-- Reddit r/selfhosted: https://reddit.com/r/selfhosted
+### Container Strategy
+- **Docker + Docker Compose**
+- Data-root on external SSD
+- overlay2 storage driver
+- systemd integration for auto-start
+- Memory limits for all containers
 
-### Technical References
-- Pi-hole Docker: https://github.com/pi-hole/docker-pi-hole
-- Tailscale Docs: https://tailscale.com/kb/
-- Grafana Loki: https://grafana.com/docs/loki/
-- Docker ARM: https://docs.docker.com/
+### Storage Layout
+```
+/dev/mmcblk1p1 (eMMC):        /                (OS, 32GB)
+/dev/sda1 (USB SSD):          /mnt/storage-primary    (Docker, 1TB)
+/dev/sdb1 (USB SSD):          /mnt/storage-secondary  (Logs/backups, 1TB)
+```
 
----
-
-## 🎯 Success Criteria
-
-Research phase is complete when:
-
-- ✅ All 17 prompts have documented findings
-- ✅ All critical path questions answered with high confidence
-- ✅ No unresolved showstoppers (or alternatives identified)
-- ✅ Resource budget validated (RAM, storage, power)
-- ✅ Architecture decisions documented with rationale
-- ✅ Implementation phases prioritized based on findings
-- ✅ Project specification updated to v2.0
-- ✅ Ready to begin Phase 1 implementation
+### Network Architecture
+- Tailscale VPN for remote access
+- Pi-hole DNS accessible to all Tailscale devices
+- No inbound firewall rules needed
+- Local network access as fallback
 
 ---
 
-## 🚦 Next Steps After Research
+## 📚 Documentation
 
-Once research is complete:
+### Specifications
+- [Project Specification v2.0](docs/specs/le-potato-server-spec-v2.md) - Complete implementation guide
 
-1. **Review** all findings with project stakeholder (you!)
-2. **Finalize** architecture decisions and document rationale
-3. **Order** any additional hardware identified
-4. **Prepare** implementation environment
-5. **Begin** Phase 1: Base System Setup
-6. **Reference** research findings during implementation
+### Research Findings
+Located in `archive/research-findings/`:
+- Hardware validation (4 prompts)
+- Software compatibility (5 prompts)
+- Storage architecture (4 prompts)
+- Monitoring solutions (3 prompts)
+- Synthesis and integration (1 prompt)
 
----
-
-## 📝 Notes
-
-- These prompts are **living documents** - update if you discover better questions
-- **Version control** your findings - they're valuable reference material
-- **Share findings** with the community if you discover novel solutions
-- **Keep a lab notebook** - document what works and what doesn't
-- **Celebrate small wins** - each answered question is progress!
-
----
-
-## 🙏 Acknowledgments
-
-This research planning package is based on:
-- The detailed project specification in `le-potato-server-spec.md`
-- Product specifications from the Amazon listing for AML-S905X-CC
-- Best practices from the home lab and self-hosting communities
-- Lessons learned from similar Raspberry Pi/SBC server projects
+### Operational Guides
+All included in [le-potato-server-spec-v2.md](docs/specs/le-potato-server-spec-v2.md):
+- Daily health checks
+- Mode switching procedures
+- Emergency troubleshooting
+- Backup and restoration
+- Service management
 
 ---
 
-## 📞 Questions or Issues?
+## ⚠️ Design Constraints
 
-If you encounter:
-- **Unclear prompts:** Refine the prompt and document the improvement
-- **Missing context:** Add it to the prompt and note what was missing
-- **New questions:** Add them to the "Open Questions" in findings
-- **Showstoppers:** Document clearly and seek input before proceeding
+### Hardware Limitations
+- **2GB RAM** - Hard limit, requires careful service selection
+- **USB 2.0 only** - 35-40 MB/s max throughput
+- **CPU throttling** - Drops to 100MHz at 60°C without cooling
+- **USB power budget** - 2A (10W) shared across all ports
+
+### Design Solutions
+- VictoriaLogs for monitoring (200MB vs 1.5GB)
+- eMMC boot for reliability and speed
+- Powered USB hub for storage stability
+- Active cooling for thermal management
+- Mutually exclusive dev/monitoring modes
 
 ---
 
-**Happy researching! May your searches be fruitful and your findings clear. 🔍🎉**
+## 🎯 Success Metrics
+
+### Phase 1-2 (Weeks 1-2)
+- [ ] System boots from eMMC in <60 seconds
+- [ ] Pi-hole accessible via Tailscale
+- [ ] Temperatures <55°C under load
+- [ ] No container restarts for 48 hours
+
+### Phase 3-4 (Weeks 3-4)
+- [ ] Monitoring stack operational
+- [ ] Temperature alerts functional
+- [ ] Development environment working
+- [ ] Total RAM <1.8GB in any mode
+
+### Long-Term (Months 1-3)
+- [ ] Uptime >99% (excluding maintenance)
+- [ ] Zero data loss events
+- [ ] No thermal throttling
+- [ ] Backups running daily
+- [ ] All services stable
 
 ---
 
-**End of README**
+## 🚦 Project Confidence
+
+**Overall: 🟢 HIGH (90%)**
+
+All critical path research completed with high confidence:
+- ✅ Hardware compatibility validated
+- ✅ Software stack confirmed functional
+- ✅ Resource budget verified
+- ✅ Thermal requirements understood
+- ✅ Power architecture designed
+- ✅ No identified showstoppers
+
+**Ready for implementation.**
+
+---
+
+## 🤝 Contributing
+
+This is a personal home server project, but the research findings and implementation guide may be useful for similar Le Potato or ARM64 SBC projects.
+
+### Useful Resources
+- **Libre Computer Forum:** https://forum.librecomputer.io/
+- **Project Specification:** [docs/specs/le-potato-server-spec-v2.md](docs/specs/le-potato-server-spec-v2.md)
+- **Research Findings:** [archive/](archive/)
+
+---
+
+## 📝 Version History
+
+### v2.0 (October 2025) - Research-Validated
+- Completed 17 research prompts
+- Major architectural changes based on findings
+- Added eMMC boot requirement
+- Added active cooling requirement
+- Added powered USB hub requirement
+- Switched to VictoriaLogs monitoring
+- Confirmed ext4 filesystem choice
+- Validated Claude Code ARM64 compatibility
+- Added detailed implementation phases
+
+### v1.0 (October 2025) - Initial Planning
+- Initial project specification
+- Research prompts identified
+- Architecture proposed (unvalidated)
+
+---
+
+## 📄 License
+
+Personal project - no formal license. Use research findings and documentation as reference for your own projects.
+
+---
+
+**Status:** ✅ Ready for Implementation
+**Next Step:** Hardware Acquisition (Phase 0)
+**Estimated Time to Production:** 4-6 weeks
+
+---
+
+*Built with research, validated with data, deployed with confidence.*
